@@ -8,6 +8,6 @@ The output were number of tweets where each tweet was stored as a JSON object, t
 
 The Tweets were Tokenized and Indexed using Apache Solr
 
-Various IR models were evaluated as well as language detection, query translation and expansion techniques were used in performance analysis.
+Various IR models were evaluated as well as language detection, query translation and expansion techniques were used in performance analysis.(check report)
 
 Implemented the UI using Bootstrap(searchengine_ui.html) to display query results based on ranking scheme selected by user.
