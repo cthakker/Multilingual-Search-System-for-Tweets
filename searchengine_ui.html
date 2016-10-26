@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Team JackDaniels</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  
+</head>
+<style>
+.bg-1 { 
+    background-image: url("bgimg.jpg");
+	background-size: 100%;
+    color: #ffffff;
+	font: 25px "Josefin Sans", sans-serif;
+}
+.text-center
+{
+text-align: center;
+}
+.image
+{
+border-radius: 50%
+-webkit-filter: drop-shadow(8px 8px 10px black); 
+    filter: drop-shadow(8px 8px 10px black);
+}
+.bg-2 { 
+    background-color: #2f2f2f; 
+    color: #ffffff;
+	font: 20px "Josefin Sans", sans-serif;
+}
+.bg-3 { 
+	background-image: url("wood.jpg"); 
+	<!-- -webkit-filter: blur(5px);
+	filter: blur(5px); --> 
+	
+	background-size: 100%;
+	font: 20px "Josefin Sans", sans-serif;
+   
+    color: #ffffff;
+}
+.container-fluid {
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+.bg-4 { 
+    background-color: #2f2f2f;
+    color: #ffffff;
+	font: 15px "Josefin Sans", sans-serif;
+}
+</style>
+
+
+
+<body>
+
+<div class="container-fluid bg-1 text-center">
+
+<h2>Team Jack Daniel's</h2>
+<img src="bird.png" class="image" alt="Bird" width="350" height="350">
+<h3>Twitter Search Engine</h3>
+</div>
+
+<div class="container-fluid bg-2 text-center" id="mydiv">
+  <h3>What are you looking for?</h3>
+  <br />
+  <label for="usr">Search here</label>
+  <br />
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox1"> Rank by Retweets</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox2"> Rank by Importance</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox3"> Search Tags</label>
+  <br />
+  <label class="radio-inline"><input type="radio" id = "eng" name="optradio">English</label>
+<label class="radio-inline"><input type="radio" id = "fra" name="optradio">French</label>
+<label class="radio-inline"><input type="radio" id = "ger" name="optradio">German</label>
+<label class="radio-inline"><input type="radio" id = "rus" name="optradio">Russian</label>
+  <input type="text" class="form-control" id="usr" width="900">
+  <br />
+  <p id="demo"></p>
+  <br />
+  <button class="btn btn-default btn-lg" onclick="loadXMLDoc()" id="search">
+  <span class="glyphicon glyphicon-search"></span> Search
+  </button>
+  <br />
+  <br />
+  <script>
+ function loadXMLDoc() {
+ var query = document.getElementById("usr").value;
+ 
+ if (document.getElementById("checkbox1").checked == true)
+ {
+ var xhttp = new XMLHttpRequest();
+ xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&sort=retweets+desc&rows=20&df=text_en&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_en + " \nTweeted by: " + obj.response.docs[i].user_name +" No. of retweets: "+ obj.response.docs[i].retweets );    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); 
+
+	}
+    }
+ };
+ }
+ else if(document.getElementById("checkbox2").checked == true)
+ {
+ var xhttp = new XMLHttpRequest();
+xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&fq=user_verified%3Atrue&sort=user_followers+desc&df=text_en&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_en + " \nTweeted by: " + obj.response.docs[i].user_name +" No. of followers: " + obj.response.docs[i].user_followers );    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); 
+ 
+ }
+  
+    }
+  };
+}
+else if(document.getElementById("checkbox3").checked == true)
+ {
+ var xhttp = new XMLHttpRequest();
+ 
+xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&df=tag&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_en + " \nTweeted by: " + obj.response.docs[i].user_name);    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); 
+ 
+ }
+  
+    }
+  };
+}
+else{
+ 
+ if(document.getElementById("eng").checked == true)
+ {
+ var xhttp = new XMLHttpRequest();
+xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&df=text_en&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_en + " \nTweeted by: " + obj.response.docs[i].user_name );    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); 
+ }
+ }
+  
+    };
+  }
+  else if(document.getElementById("fra").checked == true)
+  {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&df=text_fr&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_fr + " \nTweeted by: " + obj.response.docs[i].user_name );    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); }
+}
+};
+}
+ else if(document.getElementById("ger").checked == true)
+  {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&df=text_de&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_de + " \nTweeted by: " + obj.response.docs[i].user_name );    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); }
+}
+};
+}
+ else if(document.getElementById("rus").checked == true)
+  {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", 'http://r135.koding.io:8983/solr/projectC/select?q='+query+'&df=text_ru&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	var obj = JSON.parse(xhttp.responseText);
+	for(i=0; i<10; i++)
+	{
+	var x = document.createElement("P");                        // Create a <p> node
+	var t = document.createTextNode("Tweet: " + obj.response.docs[i].text_ru + " \nTweeted by: " + obj.response.docs[i].user_name );    // Create a text node
+	x.appendChild(t);           
+	document.getElementById("mydiv").appendChild(x); }
+}
+};
+}
+}
+}
+</script>
+</div>
+
+
+
+<div class="container-fluid bg-3 text-center">
+  <h3>Our key features?</h3>
+  <br />
+  <div class="row">
+    <div class="col-sm-4">
+      <p>Content Tagging</p>
+      
+    </div>
+    <div class="col-sm-4">
+      <p>Ranking by Retweets</p>
+   
+    </div>
+    <div class="col-sm-4"> 
+      <p>Ranking by Importance</p>
+     
+    </div>
+  </div>
+</div>
+</body>
+<footer class="container-fluid bg-4 text-center">
+  <p>Thank you and have a nice day!</p> 
+</footer>
+</html>
+
+
+<style>
+
+</style>
